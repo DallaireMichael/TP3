@@ -72,6 +72,29 @@ public class Clinique implements Serializable {
     public List<Participant> getInfirmiers() {
         return infirmiers;
     }
+    
+    /**
+     * Modifie la collection des Docteur.
+     */
+    public void setDocteurs(List<Participant> listeDoc) {
+        this.docteurs = listeDoc;
+    }
+
+
+    /**
+     * Modifie la collection des Patients.
+     */
+    public void setPatients(List<Participant> listePat) {
+    	this.patients = listePat;
+    }
+
+
+    /**
+     * Modifie la collection des Infirmiers.
+     */
+    public void setInfirmiers(List<Participant> listeInf) {
+    	this.infirmiers = listeInf;
+    }
 
 
     /**

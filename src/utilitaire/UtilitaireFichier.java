@@ -10,8 +10,13 @@
 package utilitaire;
 
 import clinique.Clinique;
+import clinique.Docteur;
+import clinique.Identification;
+import clinique.Infirmier;
+import clinique.Participant;
+import clinique.Patient;
 
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,6 +26,9 @@ import java.io.ObjectOutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -120,4 +128,48 @@ public class UtilitaireFichier {
 		}
 
 	}
+	
+	/*
+     * Provient du message sur le forum du cours.
+     * S'occupe d'aller chercher une liste de noms selon le groupe 
+     * de participant désiré, comme les docteurs, les infirmiers 
+     * et les patients par exemple.
+     */
+	public static List<Participant> getParticipantsFichierTexte(String nomFic, String type) {
+	        
+	        // TODO Auto-generated method stub
+	        List<Participant> liste = new ArrayList<Participant>();
+	        
+	        Scanner ficTexte;
+	        try {
+	            
+	            ficTexte = new Scanner(new File(nomFic));
+	            
+	            while(ficTexte.hasNext()){
+	                
+	                Identification id = new Identification(ficTexte.next(), ficTexte.next());
+	                
+	                switch(type){
+	                    case "docteur": liste.add(new Docteur(id, (int) Math.random() * 3));
+	                    break;
+	                    case "infirmier": liste.add(new Infirmier(id, true));
+	                    break;
+	                    //case "patient": liste.add(new Patient(id, ""));
+	                    //break;
+	                    
+	                }
+	                
+	            }
+	            
+	        } catch (FileNotFoundException e) {
+	            
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	            
+	        }
+	        
+	        return liste;
+	        
+	}
+
 }

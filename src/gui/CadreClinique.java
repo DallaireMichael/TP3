@@ -5,11 +5,14 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import clinique.Clinique;
+import clinique.Participant;
 import utilitaire.UtilitaireFichier;
 
 /**
@@ -120,15 +123,26 @@ public class CadreClinique extends JFrame implements Runnable{
 	 */
 	public void gererDocteur() {
 
+				// Instanciation liste Docteur
+				List<Participant> listeDocteurs = clinique.getDocteurs();
+				
+				// Vérifie s'il y a eu aucune sauvegarde dernièrement.
+				if(listeDocteurs.size() == 0){
+
+			         listeDocteurs = UtilitaireFichier.getParticipantsFichierTexte("noms.txt", "docteur");
+
+			         clinique.setDocteurs(listeDocteurs);
+
+				}
 		
-				// Les paramètres sont sur plusieurs lignes. 
+				// Les paramètres sont sur plusieurs lignes.
 				new CadreGestionParticipant(clinique,
 				
 								// Le panneau qui saisit les infos d'un docteur.
 								new PanneauSaisieDocteur(clinique.getDepartements()),
 						
 								// La liste des docteurs.
-								clinique.getDocteurs(),
+								listeDocteurs,
 								
 				                // La position et la dimension.
 								POINT,
@@ -142,6 +156,18 @@ public class CadreClinique extends JFrame implements Runnable{
 	 * gestion des informiers.
 	 */
 	public void gererInfirmier() {
+		
+				// Instanciation liste Infirmier
+				List<Participant> listeInfirmiers = clinique.getInfirmiers();
+				
+				// Vérifie s'il y a eu aucune sauvegarde dernièrement.
+				if(listeInfirmiers.size() == 0){
+		
+					listeInfirmiers = UtilitaireFichier.getParticipantsFichierTexte("noms.txt", "infirmier");
+		
+			         clinique.setInfirmiers(listeInfirmiers);
+		
+				}
 				
 				// Les paramètres sont sur plusieurs lignes. 
 				new CadreGestionParticipant(clinique,
@@ -150,7 +176,7 @@ public class CadreClinique extends JFrame implements Runnable{
 						new PanneauSaisieInfirmier(),
 						
 						// La liste des infirmiers.
-						clinique.getInfirmiers(),
+						listeInfirmiers,
 						
 		                // La position et la dimension.
 						POINT,
@@ -164,15 +190,27 @@ public class CadreClinique extends JFrame implements Runnable{
 	 * gestion des patients.
 	 */
 	public void gererPatient() {
+		
+				// Instanciation liste Patients
+				List<Participant> listePatients = clinique.getPatients();
+				
+				// Vérifie s'il y a eu aucune sauvegarde dernièrement.
+				if(listePatients.size() == 0){
+		
+					listePatients = UtilitaireFichier.getParticipantsFichierTexte("noms.txt", "patient");
+		
+			         clinique.setPatients(listePatients);
+		
+				}
 
 				// Les paramètres sont sur plusieurs lignes. 
 				new CadreGestionParticipant(clinique,
 						
 					    // Le panneau qui saisit les infos d'un patient.
-						new PanneauSaisiePatient(), 
+						new PanneauSaisiePatient(),
 		
 						// La liste de patients.
-						clinique.getPatients(),
+						listePatients,
 						
 		                // La position et la dimension.
 						POINT,
