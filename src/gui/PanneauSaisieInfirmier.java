@@ -16,6 +16,8 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
      * 
      */
     public PanneauSaisieInfirmier() {
-
+        
+        super();
+        
     }
 }

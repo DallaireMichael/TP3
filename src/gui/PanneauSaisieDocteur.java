@@ -15,6 +15,8 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
      * 
      */
     public PanneauSaisieDocteur(String[] tabelauDepartement) {
-
+        
+        super();
+        
     }
 }

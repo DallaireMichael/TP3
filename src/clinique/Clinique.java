@@ -89,4 +89,21 @@ public class Clinique implements Serializable {
 
         return TAB_DEPT[numDepartement];
     }
+    
+    /**
+     * Mutateurs
+     */
+    public void setDocteurs(List<Participant> listeDocteurs){
+        docteurs = listeDocteurs;
+    }
+    
+    public void setInfirmiers(List<Participant> listeInfirmiers){
+        infirmiers = listeInfirmiers;
+    }
+    
+    public void setPatients(List<Participant> listePatients){
+        patients = listePatients;
+    }
+    
+    
 }

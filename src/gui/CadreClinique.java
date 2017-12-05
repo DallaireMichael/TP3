@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Dimension;
+import java.util.List;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.io.FileInputStream;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import clinique.Participant;
 import clinique.Clinique;
 import utilitaire.UtilitaireFichier;
 
@@ -119,7 +121,17 @@ public class CadreClinique extends JFrame implements Runnable{
 	 * gestion des docteurs.
 	 */
 	public void gererDocteur() {
+	            
+	    
+	    List<Participant>  listeDocteurs = clinique.getDocteurs();
 
+	    if(listeDocteurs.size() == 0){
+
+	             listeDocteurs = UtilitaireFichier.getParticipantsFichierTexte("noms.txt", "docteur");
+
+	             clinique.setDocteurs(listeDocteurs);
+
+	    }
 		
 				// Les paramètres sont sur plusieurs lignes. 
 				new CadreGestionParticipant(clinique,
@@ -128,7 +140,7 @@ public class CadreClinique extends JFrame implements Runnable{
 								new PanneauSaisieDocteur(clinique.getDepartements()),
 						
 								// La liste des docteurs.
-								clinique.getDocteurs(),
+								listeDocteurs,
 								
 				                // La position et la dimension.
 								POINT,
@@ -143,6 +155,17 @@ public class CadreClinique extends JFrame implements Runnable{
 	 */
 	public void gererInfirmier() {
 				
+	    
+	    List<Participant>  listeInfirmiers = clinique.getInfirmiers();
+
+        if(listeInfirmiers.size() == 0){
+
+            listeInfirmiers = UtilitaireFichier.getParticipantsFichierTexte("noms.txt", "infirmier");
+
+                 clinique.setInfirmiers(listeInfirmiers);
+
+        }
+	    
 				// Les paramètres sont sur plusieurs lignes. 
 				new CadreGestionParticipant(clinique,
 				
@@ -150,7 +173,7 @@ public class CadreClinique extends JFrame implements Runnable{
 						new PanneauSaisieInfirmier(),
 						
 						// La liste des infirmiers.
-						clinique.getInfirmiers(),
+						listeInfirmiers,
 						
 		                // La position et la dimension.
 						POINT,
@@ -165,6 +188,16 @@ public class CadreClinique extends JFrame implements Runnable{
 	 */
 	public void gererPatient() {
 
+	    List<Participant>  listePatients = clinique.getPatients();
+
+        if(listePatients.size() == 0){
+
+            listePatients = UtilitaireFichier.getParticipantsFichierTexte("noms.txt", "patient");
+
+                 clinique.setPatients(listePatients);
+
+        }
+	    
 				// Les paramètres sont sur plusieurs lignes. 
 				new CadreGestionParticipant(clinique,
 						
@@ -172,7 +205,7 @@ public class CadreClinique extends JFrame implements Runnable{
 						new PanneauSaisiePatient(), 
 		
 						// La liste de patients.
-						clinique.getPatients(),
+						listePatients,
 						
 		                // La position et la dimension.
 						POINT,

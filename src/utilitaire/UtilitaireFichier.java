@@ -12,6 +12,17 @@ package utilitaire;
 import clinique.Clinique;
 
 
+
+
+
+
+import clinique.Docteur;
+import clinique.Identification;
+import clinique.Infirmier;
+import clinique.Patient;
+
+import java.util.List;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,11 +32,53 @@ import java.io.ObjectOutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import clinique.Participant;
+
 public class UtilitaireFichier {
 
+    
+    public static List<Participant> getParticipantsFichierTexte(String nomFic, String type) {
+        
+        // TODO Auto-generated method stub
+        List<Participant> liste = new ArrayList<Participant> ();
+        
+        Scanner ficTexte;
+        try {
+            
+            ficTexte = new Scanner(new File(nomFic));
+            
+            while(ficTexte.hasNext()){
+                
+                Identification id = new Identification(ficTexte.next(), ficTexte.next());
+                
+                switch(type){
+                    case "docteur": liste.add(new Docteur(id, (int) Math.random() * 3));
+                    break;
+                   // case "infirmier": liste.add(new Infirmier(id, true));
+                  //  break;
+                    case "patient": liste.add(new Patient(id, ""));
+                    break;
+                    
+                }
+            }
+            
+
+            
+        } catch (FileNotFoundException e) {
+            
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            }
+        
+            return liste;
+        
+        }
+    
 	/**
 	 * Tente d'ouvrir le fichier contenu dans le stream reçu.  S'il n'existe pas,
 	 * ou qu'il y a un problème, une exception est levée.
