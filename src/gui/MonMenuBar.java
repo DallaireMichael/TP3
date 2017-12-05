@@ -21,12 +21,16 @@ public class MonMenuBar extends JMenuBar{
 
 	/** ATTRIBUTS **/
 	private static final long serialVersionUID = 1L;
+	
+	// Composantes SWING pour l'interface.
 	private JMenuBar barreMenu;
 	private JMenu menu;
 	private JMenuItem docteurItemMenu;
 	private JMenuItem infirmierItemMenu;
 	private JMenuItem patientItemMenu;
 	private JMenuItem quitterItemMenu;
+	
+	// Référence de la classe CadreClinique.
 	private CadreClinique cadreClinique;
 	
 	/**
@@ -111,13 +115,14 @@ public class MonMenuBar extends JMenuBar{
 			// fermer l'application.
 			if(e.getSource() == docteurItemMenu)
 				cadreClinique.gererDocteur();
-			if(e.getSource() == infirmierItemMenu)
+			else if(e.getSource() == infirmierItemMenu)
 				cadreClinique.gererInfirmier();
-			if(e.getSource() == patientItemMenu)
+			else if(e.getSource() == patientItemMenu)
 				cadreClinique.gererPatient();
 			else	
 				// Quitte application lorsqu'on choisit l'item "Quitter".
 				System.exit(0);
+			
 		}
 		
 	}

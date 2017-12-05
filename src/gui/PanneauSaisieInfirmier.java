@@ -18,10 +18,13 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
 
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
+    
+    // Bouton à cocher dans l'interface pour la disponibilité.
     private JCheckBox disponibilite;
 
     /**
-     * S'occupe de générer l'interface pour la saisie d'informations pour un patient.
+     * S'occupe de générer l'interface pour 
+     * la saisie d'informations pour un patient.
      * 
      */
     public PanneauSaisieInfirmier() {

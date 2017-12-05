@@ -2,26 +2,18 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.WindowConstants;
 
 import clinique.Clinique;
 import clinique.Participant;
@@ -38,6 +30,9 @@ public class CadreGestionParticipant extends JDialog {
 
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
+    
+    // Composantes SWING pour l'interface la liste 
+    // des participants selon sa catégorie.
     private JPanel panneauPrincipal;
     private JScrollPane listeDeroulante;
     private JTable tableDonnees;
@@ -45,8 +40,14 @@ public class CadreGestionParticipant extends JDialog {
     private JPanel panneauGestion;
     private JButton boutonAjout;
     private JButton boutonSupprimer;
+    
+    // Référence de la classe Clinique.
     private Clinique clinique;
+    
+    // Liste de participants permettant de modifier l'interface affichée.
     private List<Participant> listeParticipant;
+    
+    // Référence classe PanneauSaisie.
     private PanneauSaisieParticipant panneauSaisie;
     
     
@@ -76,7 +77,7 @@ public class CadreGestionParticipant extends JDialog {
     	setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
     	
     	// Modifie le comportement du 'X' lors d'un clic.
-    	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    	setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     	
     	// Initialisation des composantes.
     	initialiserComposantes(position, dimCadre);

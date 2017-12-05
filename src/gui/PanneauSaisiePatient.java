@@ -21,9 +21,14 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
 
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
+    
+    // Composantes SWING pour l'interface afin d'afficher 
+    // un champ de saisie pour le NAS.
     private JTextField champSaisieNAS;
     private JLabel etiquetteNAS;
     private JPanel panneauNAS;
+     
+    // Dimension du champ de saisie pour le NAS.
     private Dimension dimensionChampSaisie = new Dimension(200, 24);
 
     /**
@@ -34,7 +39,8 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
      */
     public PanneauSaisiePatient() {
 
-    	// Appel de la méthode qui se charge de créer les composantes pour l'interface
+    	// Appel de la méthode qui se charge de créer 
+    	// les composantes pour l'interface
     	initialiserComposantesPat();
     	
     }

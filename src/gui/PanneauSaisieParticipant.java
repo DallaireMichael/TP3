@@ -24,12 +24,18 @@ implements InterfacePanSaisieParticipant {
 	
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
+    
+    // Composantes SWING pour l'interface afin d'afficher 
+    // des champs de saisie pour l'identifiant d'un participant.
     private JTextField champSaisieNom;
     private JLabel etiquetteNom;
     private JTextField champSaisiePrenom;
     private JLabel etiquettePrenom;
     private JPanel panneauNom;
     private JPanel panneauPrenom;
+    
+    // Dimension pour les TextFields pour entrer 
+    // l'identifiant d'un participant.
     private Dimension dimensionChampSaisie = new Dimension(200, 24);
 
     /**
@@ -75,11 +81,12 @@ implements InterfacePanSaisieParticipant {
     	panneauNom.add(etiquetteNom);
     	panneauNom.add(champSaisieNom);
     	
-    	// Ajout du champs de saisie du prénom et son étiquette au panneau de prénom.
+    	// Ajout du champs de saisie du prénom 
+    	// et son étiquette au panneau de prénom.
     	panneauPrenom.add(etiquettePrenom);
     	panneauPrenom.add(champSaisiePrenom);
     	
-    	// Ajout les panneaux de nom et celui de prénom au panneau de saisie
+    	// Ajout les panneaux de nom et celui de prénom au panneau de saisie.
     	// d'un participant.
     	add(panneauNom);
     	add(panneauPrenom);
@@ -131,7 +138,8 @@ implements InterfacePanSaisieParticipant {
     public boolean aviserDuneErreur() {
     	
     	// Vérifie si un des champs ne contient pas de mots.
-    	if(champSaisieNom.getText() == "" || champSaisiePrenom.getText() == "") {
+    	if(champSaisieNom.getText() == "" || 
+    			champSaisiePrenom.getText() == "") {
     		
     		// Affiche un message d'erreur et retourne true.
     		System.out.print("Les champs ne doivent pas être vides.");

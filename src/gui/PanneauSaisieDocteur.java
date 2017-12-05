@@ -21,8 +21,12 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
 
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
+    
+    // Liste déroulante affichant les départements des docteurs.
     private JScrollPane listeDeroulanteDoc;
     private JList<String> liste;
+    
+    // Tableau contenant les départements des docteurs.
     private String [] tableauDepartement;
 
     /**
@@ -158,7 +162,8 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
     	// création du docteur.
     	if(liste.getSelectedIndex() == -1) {
     	
-    		System.out.print("Il faut choisir un département pour le docteur.");
+    		System.out.print(
+    				"Il faut choisir un département pour le docteur.");
     		return true;
     		
     	}
