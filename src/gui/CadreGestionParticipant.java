@@ -205,6 +205,7 @@ public class CadreGestionParticipant extends JDialog {
 		private void supprimerSelections() {
 			// TODO Auto-generated method stub
 			System.out.println("Supprime");
+			
 		}
 		
 		/**

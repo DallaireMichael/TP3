@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -39,6 +40,9 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
      */
     public PanneauSaisiePatient() {
 
+    	// Appel du constructeur mère.
+    	super();
+    	
     	// Appel de la méthode qui se charge de créer 
     	// les composantes pour l'interface
     	initialiserComposantesPat();
@@ -136,16 +140,26 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
     public boolean aviserDuneErreur() {
     	
     	// Vérifie l'identification du patient.
-    	if(super.aviserDuneErreur() || champSaisieNAS.getText() == "") {
+    	if(super.aviserDuneErreur() == true) {
     		
-    		// Affiche un message d'erreur et retourne true si un champ 
-    		// ou plusieurs sont vides.
-    		System.out.print("Les champs ne doivent pas être vides.");
+    		// Affiche un message d'erreur et retourne true.
+    		JOptionPane.showMessageDialog(this,
+    				"Les champs de l'identifiant ne doivent pas être vides.");
     		return true;
     		
     	}
     	
-    	// Si les champs ne sont pas vides et on a un département de choisi.
+    	// Si le champ du NAS est vide.
+    	else if(champSaisieNAS.getText() == ""){
+    		
+    		// Affiche un message d'erreur et retourne true 
+    		JOptionPane.showMessageDialog(this,
+    				"Le champ pour le NAS ne doit pas être vide.");
+    		return true;
+    		
+    	}
+    	
+    	// Si les champs ne sont pas vides.
     	else {
     		
     		return false;

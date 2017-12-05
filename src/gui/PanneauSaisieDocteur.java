@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
@@ -150,19 +151,19 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
     public boolean aviserDuneErreur() {
     	
     	// Vérifie l'identification du docteur.
-    	if(super.aviserDuneErreur()) {
+    	if(super.aviserDuneErreur() == true) {
     		
-    		// Affiche un message d'erreur et retourne true.
-    		System.out.print("Les champs ne doivent pas être vides.");
+    		// Affiche un message d'erreur d'aviserDuneErreur 
+    		//de la classe mère et retourne true.
     		return true;
     		
     	}
     	
     	// Si on n'a pas de département de choisi lors de la 
     	// création du docteur.
-    	if(liste.getSelectedIndex() == -1) {
+    	else if(liste.getSelectedIndex() == -1) {
     	
-    		System.out.print(
+    		JOptionPane.showMessageDialog(this,
     				"Il faut choisir un département pour le docteur.");
     		return true;
     		

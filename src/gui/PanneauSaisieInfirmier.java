@@ -29,6 +29,9 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
      */
     public PanneauSaisieInfirmier() {
     	
+    	// Appel du constructeur mère.
+    	super();
+    	
     	// Appel à la méthode qui initialise les composantes pour 
     	// l'interface de saisie d'un infirmier.
     	initialiserComposantesInf();

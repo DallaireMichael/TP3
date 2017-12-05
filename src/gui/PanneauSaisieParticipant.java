@@ -169,31 +169,4 @@ implements InterfacePanSaisieParticipant {
     	
     }
    
-    /**
-     * Une classe qui s'occupe d'écouter l'évènement du 
-     * clique sur les items du menu. 
-     *
-     */
-    /*
-	private class champTexteEcouteur implements ActionListener {
-		
-		public void actionPerformed(ActionEvent e) {
-			
-			// On vérifie quel item du menu vient d'être appuyé afin de 
-			// déclencher l'évènement du clique. Selon l'item choisi, on
-			// appelle le sous-programme qui s'occupe d'afficher la fenêtre 
-			// de gestion des docteurs, infirmiers, patients ou bien de
-			// fermer l'application.
-			if(e.getSource() == docteurItemMenu)
-				cadreClinique.gererDocteur();
-			if(e.getSource() == infirmierItemMenu)
-				cadreClinique.gererInfirmier();
-			if(e.getSource() == patientItemMenu)
-				cadreClinique.gererPatient();
-			//else	
-				// Quitter application
-	
-		}
-		
-	}*/
 }
