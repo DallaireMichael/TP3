@@ -70,7 +70,7 @@ public class CadreGestionParticipant extends JDialog {
     private PanneauSaisieParticipant panneauSaisie;
     
     // Référence de la sous-classe PresenterBouton.
-    private PresenterBouton presenterBouton;
+    private PanneauBoutonsSaisie panneauBoutonsSaisie;
     
     
 
@@ -90,7 +90,6 @@ public class CadreGestionParticipant extends JDialog {
     		Point position, 
     		Dimension dimCadre)
     {
-    	super();
     	
     	this.clinique = clinique;
     	
@@ -126,46 +125,18 @@ public class CadreGestionParticipant extends JDialog {
      */
     public void initialiserComposantes(Point position, Dimension dimCadre) {
     	
+    	// Création de la table de données avec notre liste de participants.
     	tableDonnees = UtilitaireSwing.obtenirListe_A_Afficher(
     			listeParticipant.toArray());
     	
+    	// Création de la liste déroulante avec notre table de données.
     	listeDeroulante = new JScrollPane(tableDonnees);
 
-    	// On crée nos panneaux.
-    	panneauBas = new JPanel();
-    	panneauGestion = new JPanel();
-    	panneauPrincipal = new JPanel();
+    	// S'occupe de créer nos panneaux.
+    	creationPanneaux();
     	
-    	// On crée nos boutons.
-    	boutonAjout = new JButton("Ajouter");
-    	boutonSupprimer = new JButton("Supprimer");
-    	
-    	// Ajout de l'écouteur d'évènement sur les boutons.
-    	boutonAjout.addActionListener(new EcouteBouton());
-    	boutonSupprimer.addActionListener(new EcouteBouton());
-    	
-    	// Ajout des boutons au panneau de gestion.
-    	panneauGestion.add(boutonAjout);
-    	panneauGestion.add(boutonSupprimer);
-    	
-    	// Ajout du panneau de gestion dans le panneau du bas.
-    	// Et modifie son layout pour un CardLayout().
-    	panneauBas.add(panneauGestion);
-    	panneauBas.setLayout(new CardLayout());
-    	
-    	// Ajout de la sous-classe PresenterBouton au panneauBas.
-    	panneauBas.add(presenterBouton = new PresenterBouton());
-    	
-    	// Association du panneau principal au panneau de composante cadre.
-    	add(panneauPrincipal);
-    	
-    	// Ajout de la liste déroulante et le panneauBas dans le 
-    	// panneauPrincipal et modification du BorderLayout du panneauBas.
-    	panneauPrincipal.add(listeDeroulante);
-    	panneauPrincipal.add(panneauBas, BorderLayout.PAGE_END);
-    	
-    	// Ajout du panneu de saisie avec BorderLayout.PAGE_START.
-    	add(panneauSaisie, BorderLayout.PAGE_START);
+    	// S'occupee de créer nos boutons.
+    	creationBoutons();
     	
     	// S'occupe de vérifier si on affiche le panneau de saisie ou 
     	// on affiche la liste des participants.
@@ -180,8 +151,66 @@ public class CadreGestionParticipant extends JDialog {
     	// Met le cadre visible.
     	setVisible(true);
     }
-   
+    
     /**
+     * Cette méthode s'occupe de générer les boutons "Ajout" 
+     * et "Supprimer"
+     *
+     */
+    private void creationBoutons() {
+
+    	// On crée nos boutons.
+    	boutonAjout = new JButton("Ajouter");
+    	boutonSupprimer = new JButton("Supprimer");
+    	
+    	// Ajout de l'écouteur d'évènement sur les boutons.
+    	boutonAjout.addActionListener(new EcouteBouton());
+    	boutonSupprimer.addActionListener(new EcouteBouton());
+    	
+    	// Ajout des boutons au panneau de gestion.
+    	panneauGestion.add(boutonAjout);
+    	panneauGestion.add(boutonSupprimer);
+		
+	}
+
+	/**
+     * Cette méthode s'occupe de générer les panneaux d'affichage 
+     * qui serviront à notre interface de getion d'un participant.
+     * On verra une liste déroulante contenant notre participant selon 
+     * leur rôle dans la clinique (docteur, infirmier et patient) avec 
+     * deux boutons pour ajouter ou supprimer quelqu'un de la liste.
+     * Sinon on peut afficher l'interface pour ajouter un participant. 
+     *
+     */
+    private void creationPanneaux() {
+		
+    	// Création des panneaux.
+    	panneauBas = new JPanel();
+    	panneauGestion = new JPanel();
+    	panneauPrincipal = new JPanel();
+    	
+    	// Modifie le layout du panneau du bas pour un CardLayout().
+    	panneauBas.setLayout(new CardLayout());
+    	
+    	// Ajoute le panneau de gestion dans le panneau du bas.
+    	panneauBas.add(panneauGestion);
+    	
+    	// Ajout de la sous-classe BoutonsSaisie au panneauBas.
+    	panneauBas.add(panneauBoutonsSaisie = new PanneauBoutonsSaisie());
+    	
+    	// Association du panneau principal au panneau de composante cadre.
+    	add(panneauPrincipal);
+    	
+    	// Ajout de la liste déroulante et le panneauBas dans le 
+    	// panneauPrincipal et modification du BorderLayout du panneauBas.
+    	panneauPrincipal.add(listeDeroulante);
+    	panneauPrincipal.add(panneauBas, BorderLayout.PAGE_END);
+    	
+    	// Ajout du panneu de saisie avec BorderLayout.PAGE_START.
+    	add(panneauSaisie, BorderLayout.PAGE_START);
+	}
+
+	/**
      * Cette méthode s'occupe d'afficher le panneau de saisie si on
      * n'a pas d'élément dans notre liste de participant, sinon 
      * on affiche la liste déroulante si nous avions des 
@@ -190,7 +219,7 @@ public class CadreGestionParticipant extends JDialog {
      */
     private void  afficherPanneauSaisieOuListeDeroulante() {
 		
-    	if(tableDonnees.getRowCount() == 0) afficherPanneauSaisie();
+    	if(listeParticipant.isEmpty()) afficherPanneauSaisie();
     	
     	else afficherListeDeroulante();
 
@@ -208,8 +237,6 @@ public class CadreGestionParticipant extends JDialog {
 		
 		panneauSaisie.setVisible(true);
 		
-		panneauGestion.setVisible(!panneauGestion.isVisible());
-		
 		((CardLayout) panneauBas.getLayout()).last(panneauBas);
 		
 	}
@@ -225,8 +252,6 @@ public class CadreGestionParticipant extends JDialog {
 		listeDeroulante.setVisible(true);
 		
 		panneauSaisie.setVisible(false);
-		
-		presenterBouton.setVisible(!presenterBouton.isVisible());
 		
 		((CardLayout) panneauBas.getLayout()).first(panneauBas);
     	
@@ -252,24 +277,21 @@ public class CadreGestionParticipant extends JDialog {
     
     /**
      * Cette sous-classe privée sert à afficher les bons boutons 
-     * selon l'interface actuellement utilisée. Soit qu'on voit 
-     * les boutons "Ok" et "Annule", sinon on voit les boutons
-     * "Ajouter" et "Supprimer".
+     * pour l'interface de saisie. On voit les boutons "Ok" et "Annule"
+     * et le panneau sera implémenté dans le panneau du bas.
+     * 
      */
-    private class PresenterBouton extends JPanel {
+    private class PanneauBoutonsSaisie extends JPanel {
     	
     	/** ATTRIBUT **/
 		private static final long serialVersionUID = 1L;
     	
     	/**
     	 * S'occupe d'instancier les boutons "Ok" et "Annule"
-    	 * afin de pouvoir les afficher lorsqu'on a 
-    	 * les interfaces de saisies.
+    	 * et de l'ajouter au PanneauBoutonsSaisie.
+    	 * 
     	 */
-    	public PresenterBouton() {
-    		
-    		// Appel du constructeur parent.
-    		super();
+    	public PanneauBoutonsSaisie() {
     		
     		// On crée nos panneaux et nos boutons.
         	boutonOk = new JButton("Ok");
@@ -290,10 +312,10 @@ public class CadreGestionParticipant extends JDialog {
 
 	/**
      * Une sous-classe qui s'occupe d'écouter l'évènement du 
-     * clique sur les boutons. Si on choisi le bouton 
-     * d'ajout, on appelle le sous-programme 
-     * "passerModeAjout", sinon on appelle le sous-programme
-     * "supprimerSelections" lorsqu'on clique sur le bouton supprimer.
+     * clique sur les boutons sur les boutons "Ajout", 
+     * "Supprime", "Ok" et "Annule". Selon le bouton choisi,
+     * on effectue différente action décrite dans les commentaires 
+     * de ces sous-programmes. 
      *
      */
 	private class EcouteBouton implements ActionListener {
@@ -303,22 +325,18 @@ public class CadreGestionParticipant extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 		
 			// Si le bouton est "Ajouter", on affiche l'interface de saisie.
-			if(e.getSource() == boutonAjout)
-				passerAuModeAjout();
+			if(e.getSource() == boutonAjout) passerAuModeAjout();
 			
 			// Si le bouton est "Annule", on affiche l'interface de gestion.
-			else if(e.getSource() == boutonAnnule)
-				annuler();
+			else if(e.getSource() == boutonAnnule) annuler();
 			
 			// Si le bouton est "Ok", on ajoute le participant que 
-			// nous venons de créer.
-			else  if(e.getSource() == boutonOk)
-				ajouterSiValide();
+			// nous venons de créer s'il est valide.
+			else  if(e.getSource() == boutonOk) ajouterSiValide();
 			
 			// Si le bouton est "Supprimer", on supprimer 
 			// les participants sélectionnés de la clinique.
-			else
-				supprimerSelections();
+			else supprimerSelections();
 			
 		}
 
@@ -439,7 +457,6 @@ public class CadreGestionParticipant extends JDialog {
 					miseAJourTableDonnees();
 					
 					// Met les champs de saisie vide 
-					// et rafraîchit le panneau du cadre.
 					panneauSaisie.reset();
 					
 					UtilitaireSwing.rafraichirCadre(panneauPrincipal);
