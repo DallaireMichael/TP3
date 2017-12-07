@@ -4,9 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import utilitaire.Constantes;
 
 /**
  * Classe qui permet d'afficher le menu qu'on retrouve
@@ -22,13 +25,11 @@ public class MonMenuBar extends JMenuBar{
 	/** ATTRIBUTS **/
 	private static final long serialVersionUID = 1L;
 	
-	// Composantes SWING pour l'interface.
+	// La barre de menu.
 	private JMenuBar barreMenu;
+	
+	// Le menu qui sera affiché dans la barre de menu.
 	private JMenu menu;
-	private JMenuItem docteurItemMenu;
-	private JMenuItem infirmierItemMenu;
-	private JMenuItem patientItemMenu;
-	private JMenuItem quitterItemMenu;
 	
 	// Référence de la classe CadreClinique.
 	private CadreClinique cadreClinique;
@@ -46,11 +47,8 @@ public class MonMenuBar extends JMenuBar{
 	 */
 	public MonMenuBar(CadreClinique cadreClinique) {
 		
-		// Copie de la référence cadreClinique à notre attibut
-		// cadreClinique.
 		this.cadreClinique = cadreClinique;
 		
-		// Appel à la méthode qui se charge d'initialiser les composantes.
 		initialiserComposantes();
 		
 	}
@@ -66,37 +64,44 @@ public class MonMenuBar extends JMenuBar{
     	// Création de la barre de menu.
 		barreMenu = new JMenuBar();
 		
-		// Création du menu "Gestion" et ajout dans la barre de menu.
+		// Création du menu "Gestion".
 		menu = new JMenu("Gestion");
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Le menu qu s'occupe de la gestion de la clinique.");
+		
+		// Ajout dans la barre de menu.
 		barreMenu.add(menu);
 		
-		//Création du premier onglet du menu : Docteur.
-		docteurItemMenu = new JMenuItem("Docteur");
-		docteurItemMenu.addActionListener(new itemMenuEcouteur());
-		
-		//Création du deuxième onglet du menu : Infirimier.
-		infirmierItemMenu = new JMenuItem("Infirmier");
-		infirmierItemMenu.addActionListener(new itemMenuEcouteur());
-		
-		//Création du troisième onglet du menu : Patient.
-		patientItemMenu = new JMenuItem("Patient"); 
-		patientItemMenu.addActionListener(new itemMenuEcouteur());
-		
-		//Création du dernier onglet du menu : Quitter.
-		quitterItemMenu = new JMenuItem("Quitter");
-		quitterItemMenu.addActionListener(new itemMenuEcouteur());
-		
-		// Ajout des items du menu au menu "Gestion".
-		menu.add(docteurItemMenu);
-		menu.add(infirmierItemMenu);
-		menu.add(patientItemMenu);
-		menu.add(quitterItemMenu);
+		//Création des onglets du menu.
+		creerItemsMenu();
 		
 		// Ajout de la barre du menu à la classe. 
 		add(barreMenu);
 		
+	}
+    
+    /**
+     * Boucle qui instancie les items du menu grâce 
+     * à une constante qui est un tableau de type String 
+     * contenant les noms des items pour la barre de menu.
+     * On retrouve à la fin de la création, un menu contenant
+     * un onglet "Docteur", "Infirmier", "Patient" et "Quitter".
+     *  
+     */
+
+	public void creerItemsMenu() {
+			
+		for(int i = 0; i < Constantes.TAB_ITEMS_MENU.length; i++) {
+			
+			//Création d'un item pour le menu.
+			JMenuItem itemMenu = new JMenuItem(Constantes.TAB_ITEMS_MENU[i]);
+			
+			// Ajout de l'écouteur d'évènement.
+			itemMenu.addActionListener(new itemMenuEcouteur());
+			
+			// Ajout de l'item au menu "Gestion".
+			menu.add(itemMenu);
+			
+		}
+			
 	}
 
 
@@ -106,23 +111,40 @@ public class MonMenuBar extends JMenuBar{
      */
 	private class itemMenuEcouteur implements ActionListener {
 		
+		/* On vérifie quel item du menu vient d'être appuyé afin de 
+		* déclencher l'évènement du clique. Selon l'item choisi, on
+		* appelle le sous-programme qui s'occupe d'afficher la fenêtre 
+		* de gestion/saisie correspondante.
+		*/ 
 		public void actionPerformed(ActionEvent e) {
 			
-			// On vérifie quel item du menu vient d'être appuyé afin de 
-			// déclencher l'évènement du clique. Selon l'item choisi, on
-			// appelle le sous-programme qui s'occupe d'afficher la fenêtre 
-			// de gestion des docteurs, infirmiers, patients ou bien de
-			// fermer l'application.
-			if(e.getSource() == docteurItemMenu)
+			// La gestion et saisie des docteurs.
+			if(((AbstractButton)e.getSource()).getText() == 
+					Constantes.TAB_ITEMS_MENU[0]) {
+				
 				cadreClinique.gererDocteur();
-			else if(e.getSource() == infirmierItemMenu)
-				cadreClinique.gererInfirmier();
-			else if(e.getSource() == patientItemMenu)
-				cadreClinique.gererPatient();
-			else	
-				// Quitte application lorsqu'on choisit l'item "Quitter".
-				System.exit(0);
+				
+			}
 			
+			// La gestion et saisie des infirmiers.
+			else if(((AbstractButton)e.getSource()).getText() ==
+					Constantes.TAB_ITEMS_MENU[1]) {
+				
+				cadreClinique.gererInfirmier();
+				
+			}
+				
+			// La gestion et saisie des infirmiers.
+			else if(((AbstractButton)e.getSource()).getText() == 
+					Constantes.TAB_ITEMS_MENU[2]) {
+				
+				cadreClinique.gererPatient();
+				
+			}
+				
+			// Quitte application lorsqu'on choisit l'item "Quitter".
+			else System.exit(0);
+
 		}
 		
 	}

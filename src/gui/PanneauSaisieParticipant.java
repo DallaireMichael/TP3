@@ -1,14 +1,14 @@
 package gui;
 
-import java.awt.Dimension;
-
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import clinique.Identification;
 import clinique.Participant;
+import utilitaire.Constantes;
 
 /**
  * Classe mère des tous les panneaux utiles pour la clinique.
@@ -25,18 +25,23 @@ implements InterfacePanSaisieParticipant {
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
     
-    // Composantes SWING pour l'interface afin d'afficher 
-    // des champs de saisie pour l'identifiant d'un participant.
+    // Champ de saisie pour le nom.
     private JTextField champSaisieNom;
-    private JLabel etiquetteNom;
-    private JTextField champSaisiePrenom;
-    private JLabel etiquettePrenom;
-    private JPanel panneauNom;
-    private JPanel panneauPrenom;
     
-    // Dimension pour les TextFields pour entrer 
-    // l'identifiant d'un participant.
-    private Dimension dimensionChampSaisie = new Dimension(200, 24);
+    // Le texte écrit à côté du champ pour le nom.
+    private JLabel etiquetteNom;
+    
+    // Champ de saisie pour le prénom.
+    private JTextField champSaisiePrenom;
+    
+    // Le texte écrit à côté du champ pour le prénom.
+    private JLabel etiquettePrenom;
+    
+    // Panneau pour le nom.
+    private JPanel panneauNom;
+    
+    // Panneau pour le prénom.
+    private JPanel panneauPrenom;
 
     /**
      * Affiche deux champ de saisie qui permettent de définir
@@ -49,14 +54,14 @@ implements InterfacePanSaisieParticipant {
     	// d'un participant en PAGE_AXIS.
     	this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     	
-    	// Appel le sous-programme qui initialise les composantes du panneau.
     	initialiserComposantes();
     	
     }
     
     /** 
-     * S'occupe d'initialiser tous les composantes du panneau de saisie.
-     * 
+     * S'occupe d'initialiser toutes les composantes du panneau de saisie.
+     * On affiche deux champs de saisie qui demandent un nom et un prénom.
+     *  
      * @return void
      */
     public void initialiserComposantes() {
@@ -69,13 +74,9 @@ implements InterfacePanSaisieParticipant {
     	panneauNom = new JPanel();
     	panneauPrenom = new JPanel();
     	
-    	// Ajout des écouteur d'évènements sur les champs de saisie.
-    	//champSaisieNom.addActionListener(new champTexteEcouteur());
-    	//champSaisiePrenom.addActionListener(new champTexteEcouteur());
-    	
     	// Ajustement de la longeur des champs de saisie.
-    	champSaisieNom.setPreferredSize(dimensionChampSaisie);
-    	champSaisiePrenom.setPreferredSize(dimensionChampSaisie);
+    	champSaisieNom.setPreferredSize(Constantes.DIMENSION_TEXTFIELD);
+    	champSaisiePrenom.setPreferredSize(Constantes.DIMENSION_TEXTFIELD);
     	
     	// Ajout du champs de saisie du nom et son étiquette au panneau de nom.
     	panneauNom.add(etiquetteNom);
@@ -96,18 +97,15 @@ implements InterfacePanSaisieParticipant {
     /**
      * S'occupe de retourne une nouvelle 'Identification' 
      * possédant le nom et le prénom contenu dans les boîtes 
-     * de textes de ce panneaus.
+     * de textes de ce panneau.
      * 
      * @return Identification nouvelleId
      */
     public Identification getIdentification() {
-        
-    	// Création du nouvel identifiant.
-    	Identification nouvelleId = new Identification(
+    	
+    	return new Identification(
     			champSaisieNom.getText(), 
     			champSaisiePrenom.getText());
-    	
-    	return nouvelleId;
     	
     }
     
@@ -117,14 +115,12 @@ implements InterfacePanSaisieParticipant {
      * de textes de ce panneau même si les champs de saisie sont vides.
      * 
      * @return Participant nouveauParticipant
+     * 		   Nouveau participant avec notre id d'écrit.	
      */
     @Override
     public Participant getParticipant() {
-        
-    	// Création du nouvel identifiant grâce à getIdentification.
-    	Participant nouveauParticipant = new Participant(getIdentification());
     	
-    	return nouveauParticipant;
+    	return new Participant(getIdentification());
     	
     }
 
@@ -137,23 +133,20 @@ implements InterfacePanSaisieParticipant {
     @Override
     public boolean aviserDuneErreur() {
     	
-    	// Vérifie si un des champs ne contient pas de mots.
-    	if(champSaisieNom.getText() == "" || 
-    			champSaisiePrenom.getText() == "") {
+    	// Vérifie si un ou les champs ne contienent pas de mots.
+    	if(champSaisieNom.getText().equals("") || 
+    			champSaisiePrenom.getText().equals("")) {
     		
     		// Affiche un message d'erreur et retourne true.
-    		System.out.print("Les champs ne doivent pas être vides.");
+    		JOptionPane.showMessageDialog(this, Constantes.MSG_CHAMP_ID_VIDE);
+    		
     		return true;
     		
     	}
     	
     	// Si les champs ne sont pas vides.
-    	else {
-    		
-    		return false;
-    		
-    	}
-    	
+    	return false;
+    
     }
 
     /**
@@ -165,6 +158,7 @@ implements InterfacePanSaisieParticipant {
     public void reset() {
         
     	champSaisieNom.setText("");
+    	
     	champSaisiePrenom.setText("");
     	
     }

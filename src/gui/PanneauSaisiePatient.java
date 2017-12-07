@@ -1,13 +1,12 @@
 package gui;
 
-import java.awt.Dimension;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import clinique.Patient;
+import utilitaire.Constantes;
 
 /**
  * Cette classe s'occupe de gérer la saisie des informations 
@@ -22,15 +21,15 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
 
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
-    
-    // Composantes SWING pour l'interface afin d'afficher 
-    // un champ de saisie pour le NAS.
-    private JTextField champSaisieNAS;
-    private JLabel etiquetteNAS;
-    private JPanel panneauNAS;
      
-    // Dimension du champ de saisie pour le NAS.
-    private Dimension dimensionChampSaisie = new Dimension(200, 24);
+    // Un champ de saisie pour le NAS.
+    private JTextField champSaisieNAS;
+ 
+    // L'étiquette du champ de saisie pour le NAS.
+    private JLabel etiquetteNAS;
+    
+    // Le panneau contenant le champ texte et son étiquette.
+    private JPanel panneauNAS;
 
     /**
      * Affiche deux champ de saisie qui permettent de définir
@@ -50,24 +49,25 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
     }
     
     /** 
-     * S'occupe d'initialiser tous les composantes du panneau 
-     * de saisie pour l'interface d'un patient.
+     * S'occupe d'initialiser toutes les composantes du panneau 
+     * de saisie pour l'interface d'un patient. Crée le panneau,
+     * l'étiquette et le champ de saisie pour le NAS.
      * 
      * @return void
      */
     public void initialiserComposantesPat() {
 
-    	// On crée nos panneaux, nos étiquettes et champ de saisie
-    	// pour le numéro d'assurance sociale.
     	etiquetteNAS = new JLabel("NAS");
+    	
     	champSaisieNAS = new JTextField();
+    	
     	panneauNAS = new JPanel();
     	
     	// Ajustement de la longeur du champ de saisie.
-    	champSaisieNAS.setPreferredSize(dimensionChampSaisie);
+    	champSaisieNAS.setPreferredSize(Constantes.DIMENSION_TEXTFIELD);
     	
-    	// Ajout du champ de saisie du NAS et son étiquette au panneau de NAS.
     	panneauNAS.add(etiquetteNAS);
+    	
     	panneauNAS.add(champSaisieNAS);
     	
     	// Ajout les panneaux de NAS au panneau de saisie d'un patient.
@@ -82,32 +82,21 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
      * 		   
      */
     public String getNAS() {
-    	
-    	String numeroNAS;
-    	
-    	// le numéro de NAS provenant du champ de saisie.
-    	numeroNAS = champSaisieNAS.getText();
-    	
-	    return numeroNAS;
+
+	    return champSaisieNAS.getText();
 		
 	}
     
     /** 
      * Retourne un nouveau Patient possédant l'identification contenu 
-     * dans la classe mère et le NAS.
+     * dans la classe mère et le NAS entré.
      * 
      * @return Patient 
-     * 		   
+     * 		   Un nouveau Patient avec notre information de donné.
      */
     public Patient getParticipant() {
     	
-    	// Création du participant grâce à la méthode
-    	// dans la classe mère.
-    	Patient patient = new Patient(
-    			this.getIdentification(), 
-    			getNAS());
-    	
-	    return patient;
+	    return new Patient(this.getIdentification(), getNAS());
 		
 	}
     
@@ -121,17 +110,15 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
     @Override
     public void reset() {
         
-    	// Appel de la méthode 'reset' de la classe mère.
     	super.reset();
     	
-    	// Efface le texte du champ de saisie pour le NAS.
     	champSaisieNAS.setText("");
     	
     }
     
     /**
-     * S'occupe de vérifier si un des champs de saisie ne contient 
-     * pas de texte (ou bien les deux sont vides). Si c'est le cas, 
+     * S'occupe de vérifier si un des trois champs de saisie ne contiennent 
+     * pas de texte (ou bien les trois sont vides). Si c'est le cas, 
      * on retourne true et un message d'erreur, sinon on retourne false.
      * 
      * @return boolean.
@@ -139,32 +126,17 @@ public class PanneauSaisiePatient extends PanneauSaisieParticipant {
     @Override
     public boolean aviserDuneErreur() {
     	
-    	// Vérifie l'identification du patient.
-    	if(super.aviserDuneErreur() == true) {
-    		
-    		// Affiche un message d'erreur et retourne true.
-    		JOptionPane.showMessageDialog(this,
-    				"Les champs de l'identifiant ne doivent pas être vides.");
-    		return true;
-    		
-    	}
+    	if(super.aviserDuneErreur() == true) return true;
     	
     	// Si le champ du NAS est vide.
-    	else if(champSaisieNAS.getText() == ""){
+    	else if(champSaisieNAS.getText().equals("")){
     		
-    		// Affiche un message d'erreur et retourne true 
-    		JOptionPane.showMessageDialog(this,
-    				"Le champ pour le NAS ne doit pas être vide.");
+    		JOptionPane.showMessageDialog(this, Constantes.MSG_CHAMP_NAS_VIDE);
     		return true;
     		
     	}
     	
-    	// Si les champs ne sont pas vides.
-    	else {
-    		
-    		return false;
-    		
-    	}
+    	return false;
     	
     }
 

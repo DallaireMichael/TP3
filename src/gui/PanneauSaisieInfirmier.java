@@ -32,27 +32,23 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
     	// Appel du constructeur mère.
     	super();
     	
-    	// Appel à la méthode qui initialise les composantes pour 
-    	// l'interface de saisie d'un infirmier.
     	initialiserComposantesInf();
 
     }
     
     /** 
-     * S'occupe d'initialiser tous les composantes 
+     * S'occupe d'initialiser toutes les composantes 
      * du panneau de saisie pour l'interface avec les infirmiers.
+     * On crée un bouton à coché, on le met coché et on l'ajoute au panneau.
      * 
      * @return void
      */
     public void initialiserComposantesInf() {
     	
-    	// Création du bouton pour choisir la disponibilité de l'infirmier.
     	disponibilite = new JCheckBox("Disponible");
     	
-    	// Met le bouton déjà coché par défaut.
     	disponibilite.setSelected(true);
-    	
-    	// Ajout du bouton au panneau présentement utilisé.
+
     	add(disponibilite);
     	
     }
@@ -62,11 +58,10 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
      * (si la boîte est coché = true, sinon c'est false).
      * 
      * @return boolean 
-     * 		   
+     * 		   Retourne l'état de la case à cocher.
      */
     public boolean getDisponibilite() {
     	
-    	// Retourne l'état de la case à cocher.
 	    return disponibilite.isSelected();
 		
 	}
@@ -77,17 +72,11 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
      * et ce sans validation.
      * 
      * @return Infirmier 
-     * 		   
+     * 		   Un infirmier avec le nom, prénom et sa disponibilité.
      */
     public Infirmier getParticipant() {
     	
-    	// Création du participant grâce à la méthode
-    	// dans la classe mère.
-    	Infirmier infirmier = new Infirmier(
-    			this.getIdentification(), 
-    			getDisponibilite());
-    	
-	    return infirmier;
+	    return new Infirmier(this.getIdentification(), getDisponibilite());
 		
 	}
     
@@ -100,10 +89,8 @@ public class PanneauSaisieInfirmier extends PanneauSaisieParticipant {
     @Override
     public void reset() {
         
-    	// Appel de la méthode 'reset' de la classe mère.
     	super.reset();
     	
-    	// Met la case à cocher à true
     	disponibilite.setSelected(true);
     	
     }

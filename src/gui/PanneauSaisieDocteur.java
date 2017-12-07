@@ -8,6 +8,7 @@ import javax.swing.ListSelectionModel;
 
 import clinique.Clinique;
 import clinique.Docteur;
+import utilitaire.Constantes;
 
 /**
  * Cette classe s'occupe de gérer la saisie des informations 
@@ -25,6 +26,8 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
     
     // Liste déroulante affichant les départements des docteurs.
     private JScrollPane listeDeroulanteDoc;
+    
+    // Liste contenant les départements des docteurs.
     private JList<String> liste;
     
     // Tableau contenant les départements des docteurs.
@@ -42,7 +45,6 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
     	// Appel du constructeur mère.
     	super();
     	
-    	// Copie référence du tableau de type "String" passé en paramètre.
     	this.tableauDepartement = tableauDepartement;
     	
     	// Appel à la méthode qui se charge d'initialiser 
@@ -59,16 +61,9 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
      */
     public void initialiserComposantesDoc() {
     	
-	    // Création de la liste des départements.
-		DefaultListModel<String> listModele = new DefaultListModel<String>();
-		
-		// Ajout des départements  Chirurgie, Urologie et Urgence .
-		listModele.addElement(tableauDepartement[Clinique.CHIRURGIE]);
-		listModele.addElement(tableauDepartement[Clinique.UROLOGIE]);
-		listModele.addElement(tableauDepartement[Clinique.URGENCE]);
-
-		// Copie de la liste en JList.
-		liste = new JList<String>(listModele);
+	    // Instancie la liste modèle qu'on va affecter à notre 
+    	// liste de département qui sera affiché dans la liste déroulante.
+		liste = new JList<String>(creerListeModele());
 		
 		// Change le type de sélection de la JList liste.
 		liste.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -83,6 +78,30 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
 	}
     
     /** 
+     * Création de la liste modèle pour les départements.
+     * Afin de pouvoir l'affecter à un JList plus loin.
+     * 
+     * @return DefaultListModel<String> listeModele
+     * 		   Contient tous les départements de la clinique.	
+     */
+    private DefaultListModel<String> creerListeModele() {
+		
+    	
+		DefaultListModel<String> listeModele = new DefaultListModel<String>();
+		
+		// Boucle qui ajoute les départements à notre liste modèle.
+		// On retrouve pour l'instant les départements 
+		// "Urologie", "Urgence" et "Chirurgie".
+		for(int i = 0; i< tableauDepartement.length; i++) {
+			
+			listeModele.addElement(tableauDepartement[i]);
+			
+		}
+		
+		return listeModele;
+	}
+
+	/** 
      * Retourne le numéro du département selon le numéro passé en paramètre.
      * 
      * @return int 
@@ -90,13 +109,7 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
      */
     public int getNumeroDepartement() {
     	
-    	int numeroDep;
-    	
-    	// Le numéro du département correspondant à
-        // la chaîne de caractère sélectionné.
-    	numeroDep = liste.getSelectedIndex();
-    	
-	    return numeroDep;
+	    return liste.getSelectedIndex();
 		
 	}
     
@@ -106,17 +119,11 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
      * et ce sans validation.
      * 
      * @return Docteur 
-     * 		   
+     * 		   Un nouveau docteur avec l'information qu'on écrit.
      */
     public Docteur getParticipant() {
-    	
-    	// Création du participant grâce à la méthode
-    	// dans la classe mère.
-    	Docteur docteur = new Docteur(
-    			this.getIdentification(), 
-    			getNumeroDepartement());
-    	
-	    return docteur;
+  
+	    return new Docteur(this.getIdentification(), getNumeroDepartement());
 		
 	}
     
@@ -130,10 +137,8 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
     @Override
     public void reset() {
         
-    	// Appel de la méthode 'reset' de la classe mère.
     	super.reset();
     	
-    	// Efface la sélection du département dans la liste.
     	liste.clearSelection();
     	
     }
@@ -150,31 +155,20 @@ public class PanneauSaisieDocteur extends PanneauSaisieParticipant {
     @Override
     public boolean aviserDuneErreur() {
     	
-    	// Vérifie l'identification du docteur.
-    	if(super.aviserDuneErreur() == true) {
-    		
-    		// Affiche un message d'erreur d'aviserDuneErreur 
-    		//de la classe mère et retourne true.
-    		return true;
-    		
-    	}
+    	// Vérifie l'identification du docteur a ou des champs de vides.
+    	if(super.aviserDuneErreur()) return true;
     	
     	// Si on n'a pas de département de choisi lors de la 
-    	// création du docteur.
+    	// création du docteur, on affiche un message d'erreur.
     	else if(liste.getSelectedIndex() == -1) {
     	
-    		JOptionPane.showMessageDialog(this,
-    				"Il faut choisir un département pour le docteur.");
+    		JOptionPane.showMessageDialog(this, Constantes.MSG_SELECT_DEP_VIDE);
+    		
     		return true;
     		
     	}
-    	
-    	// Si les champs ne sont pas vides et on a un département de choisi.
-    	else {
-    		
-    		return false;
-    		
-    	}
+    
+    	return false;
     	
     }
 }

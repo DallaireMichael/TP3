@@ -11,12 +11,16 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import clinique.Clinique;
 import clinique.Participant;
+import utilitaire.Constantes;
+import utilitaire.UtilitaireFichier;
 
 /**
  * Une interface graphique qui hérite par extension de JDialog.
@@ -30,16 +34,31 @@ public class CadreGestionParticipant extends JDialog {
 
 	/** ATTRIBUTS **/
     private static final long serialVersionUID = 1L;
-    
-    // Composantes SWING pour l'interface la liste 
-    // des participants selon sa catégorie.
-    private JPanel panneauPrincipal;
+
+    // La liste déroulante qui montre les participants de la clinique.
     private JScrollPane listeDeroulante;
+    
+    // La table de données contenant les participants.
     private JTable tableDonnees;
+    
+    // Le panneau qui s'occupe d'interchanger les boutons selon 
+    // l'interface de saisie ou celle de gestion.
     private JPanel panneauBas;
+    
+    // Le panneau qui s'occupe des boutons au bas de la fenêtre.
     private JPanel panneauGestion;
+    
+    // Le panneau qui contient tous les panneaux de l'interface.
+    // Il sera ajouté au panneau de ce cadre.
+    private JPanel panneauPrincipal;
+    
+    // Les boutons "Ajouter" et "Supprimer"
     private JButton boutonAjout;
     private JButton boutonSupprimer;
+    
+    // Les boutons "Ok" et "Annule".
+	private JButton boutonOk;
+	private JButton boutonAnnule;
     
     // Référence de la classe Clinique.
     private Clinique clinique;
@@ -49,6 +68,9 @@ public class CadreGestionParticipant extends JDialog {
     
     // Référence classe PanneauSaisie.
     private PanneauSaisieParticipant panneauSaisie;
+    
+    // Référence de la sous-classe PresenterBouton.
+    private PresenterBouton presenterBouton;
     
     
 
@@ -69,8 +91,11 @@ public class CadreGestionParticipant extends JDialog {
     		Dimension dimCadre)
     {
     	super();
+    	
     	this.clinique = clinique;
+    	
     	this.panneauSaisie = (PanneauSaisieParticipant) panneauSaisie;
+    	
     	this.listeParticipant = listeParticipant;
     	
     	// Rends le cadre modal.
@@ -85,7 +110,11 @@ public class CadreGestionParticipant extends JDialog {
     }
     
     /** 
-     * S'occupe d'initialiser tous les composantes du cadre.
+     * S'occupe d'initialiser toutes les composantes du panneau cadre.
+     * On utilise UtilitaireSwing pour convertir la liste à afficher
+     * en une table de données. Par la suite, on ajoute la table de 
+     * données à notre liste déroulante. On ajoute un écouteur d'évènement
+     * à nos boutons, ce qui permettra de changer l'interface.
      * 
      * @param Point position
      * 		  Pour positioner le cadre.
@@ -97,26 +126,21 @@ public class CadreGestionParticipant extends JDialog {
      */
     public void initialiserComposantes(Point position, Dimension dimCadre) {
     	
-    	// Utilise UtilitaireSwing pour convertir la liste à afficher
-    	// en une table de données, on doit convertir en array le paramètre.
     	tableDonnees = UtilitaireSwing.obtenirListe_A_Afficher(
     			listeParticipant.toArray());
     	
-    	// Création de la liste déroulante.
     	listeDeroulante = new JScrollPane(tableDonnees);
-    	
-    	// S'occupe de vérifier si on affiche le panneau de saisie ou 
-    	// on affiche la liste des participants.
-    	afficherPanneauSaisieOuListeDeroulante();
 
-    	// On crée nos panneaux et nos boutons.
+    	// On crée nos panneaux.
     	panneauBas = new JPanel();
     	panneauGestion = new JPanel();
     	panneauPrincipal = new JPanel();
+    	
+    	// On crée nos boutons.
     	boutonAjout = new JButton("Ajouter");
     	boutonSupprimer = new JButton("Supprimer");
     	
-    	// Ajout des écouteurs sur le bouton d'ajout et celui de suppression.
+    	// Ajout de l'écouteur d'évènement sur les boutons.
     	boutonAjout.addActionListener(new EcouteBouton());
     	boutonSupprimer.addActionListener(new EcouteBouton());
     	
@@ -129,55 +153,143 @@ public class CadreGestionParticipant extends JDialog {
     	panneauBas.add(panneauGestion);
     	panneauBas.setLayout(new CardLayout());
     	
+    	// Ajout de la sous-classe PresenterBouton au panneauBas.
+    	panneauBas.add(presenterBouton = new PresenterBouton());
+    	
     	// Association du panneau principal au panneau de composante cadre.
+    	add(panneauPrincipal);
+    	
     	// Ajout de la liste déroulante et le panneauBas dans le 
     	// panneauPrincipal et modification du BorderLayout du panneauBas.
-    	add(panneauPrincipal);
     	panneauPrincipal.add(listeDeroulante);
     	panneauPrincipal.add(panneauBas, BorderLayout.PAGE_END);
     	
     	// Ajout du panneu de saisie avec BorderLayout.PAGE_START.
     	add(panneauSaisie, BorderLayout.PAGE_START);
     	
-    	// Ajuster la position et la dimension du cadre.
+    	// S'occupe de vérifier si on affiche le panneau de saisie ou 
+    	// on affiche la liste des participants.
+    	afficherPanneauSaisieOuListeDeroulante();
+    	
+    	// Ajustement de la position du cadre.
     	setLocation(position);
+    	
+    	// Ajustement de la dimension du cadre.
     	setSize(dimCadre);
     	
     	// Met le cadre visible.
     	setVisible(true);
     }
-    
+   
     /**
-     * Cette méthode s'occupe d'afficher le panneau de saisie si nous 
-     * n'avions pas une liste de docteurs, d'infirmiers ou de patients.
-     * Sinon elle affiche la liste. 
+     * Cette méthode s'occupe d'afficher le panneau de saisie si on
+     * n'a pas d'élément dans notre liste de participant, sinon 
+     * on affiche la liste déroulante si nous avions des 
+     * participants dans notre liste voulu.
      *
      */
-    private void afficherPanneauSaisieOuListeDeroulante() {
+    private void  afficherPanneauSaisieOuListeDeroulante() {
 		
-		// Vérifie si notre liste est vide.
-    	if(listeParticipant.size() == 0) {
-    		
-    		// On rend le panneau de saisie visible 
-    		// et la liste déroulante invisible.
-    		listeDeroulante.setVisible(false);
-    		panneauSaisie.setVisible(true);
-    		
-    	}
+    	if(tableDonnees.getRowCount() == 0) afficherPanneauSaisie();
     	
-    	else {
+    	else afficherListeDeroulante();
+
+	}
+    
+    /**
+     * Cette méthode s'occupe d'afficher le panneau de saisie
+     * en le mettant visible et la liste déroulante invisible.
+     * De plus, on affiche les boutons "Ok" et "Annule".
+     *
+     */
+    private void afficherPanneauSaisie() {
+		
+		listeDeroulante.setVisible(false);
+		
+		panneauSaisie.setVisible(true);
+		
+		panneauGestion.setVisible(!panneauGestion.isVisible());
+		
+		((CardLayout) panneauBas.getLayout()).last(panneauBas);
+		
+	}
+    
+    /**
+     * Cette méthode s'occupe d'afficher la liste déroulante
+     * en rendant le panneau de saisie invisible et 
+     * en affichant les boutons "Ajouter" et "Supprimer".
+     *
+     */
+    private void afficherListeDeroulante() {
+	
+		listeDeroulante.setVisible(true);
+		
+		panneauSaisie.setVisible(false);
+		
+		presenterBouton.setVisible(!presenterBouton.isVisible());
+		
+		((CardLayout) panneauBas.getLayout()).first(panneauBas);
+    	
+	}
+    
+    /**
+     * Cette méthode s'occupe d'ajuster la JTable après l'ajout
+     * d'un participant dans la liste. On supprime et recrée une JTable.
+     * Et on rafraîchit l'interface par la suite.
+     */
+    private void miseAJourTableDonnees() {
+		
+    	listeDeroulante.remove(tableDonnees);
+    	
+    	tableDonnees = UtilitaireSwing.obtenirListe_A_Afficher(
+    			listeParticipant.toArray());
+    	
+    	listeDeroulante.setViewportView(tableDonnees);
+    	
+		UtilitaireSwing.rafraichirCadre(panneauPrincipal);
+    	
+	}
+    
+    /**
+     * Cette sous-classe privée sert à afficher les bons boutons 
+     * selon l'interface actuellement utilisée. Soit qu'on voit 
+     * les boutons "Ok" et "Annule", sinon on voit les boutons
+     * "Ajouter" et "Supprimer".
+     */
+    private class PresenterBouton extends JPanel {
+    	
+    	/** ATTRIBUT **/
+		private static final long serialVersionUID = 1L;
+    	
+    	/**
+    	 * S'occupe d'instancier les boutons "Ok" et "Annule"
+    	 * afin de pouvoir les afficher lorsqu'on a 
+    	 * les interfaces de saisies.
+    	 */
+    	public PresenterBouton() {
     		
-    		// On rend le panneau de saisie invisible 
-    		// et la liste déroulante visible.
-    		listeDeroulante.setVisible(true);
-    		panneauSaisie.setVisible(false);
+    		// Appel du constructeur parent.
+    		super();
+    		
+    		// On crée nos panneaux et nos boutons.
+        	boutonOk = new JButton("Ok");
+        	boutonAnnule = new JButton("Annule");
+        	
+        	// Ajout des écouteurs sur le bouton d'ajout
+        	// et celui de suppression.
+        	boutonOk.addActionListener(new EcouteBouton());
+        	boutonAnnule.addActionListener(new EcouteBouton());
+        	
+        	// Ajout des boutons au panneau de gestion.
+        	add(boutonOk);
+        	add(boutonAnnule);
     		
     	}
     	
 	}
 
 	/**
-     * Une classe qui s'occupe d'écouter l'évènement du 
+     * Une sous-classe qui s'occupe d'écouter l'évènement du 
      * clique sur les boutons. Si on choisi le bouton 
      * d'ajout, on appelle le sous-programme 
      * "passerModeAjout", sinon on appelle le sous-programme
@@ -186,35 +298,156 @@ public class CadreGestionParticipant extends JDialog {
      */
 	private class EcouteBouton implements ActionListener {
 		
+		// On vérifie quel bouton qui vient de déclencher l'évènement 
+		// du clique.
 		public void actionPerformed(ActionEvent e) {
-			
-			// On vérifie quel bouton qui vient de déclencher l'évènement 
-			// du clique. Selon le bouton choisi, on appelle le
-			// sous-programme d'ajout ou celui de suppression.
+		
+			// Si le bouton est "Ajouter", on affiche l'interface de saisie.
 			if(e.getSource() == boutonAjout)
-				passerModeAjout();
+				passerAuModeAjout();
+			
+			// Si le bouton est "Annule", on affiche l'interface de gestion.
+			else if(e.getSource() == boutonAnnule)
+				annuler();
+			
+			// Si le bouton est "Ok", on ajoute le participant que 
+			// nous venons de créer.
+			else  if(e.getSource() == boutonOk)
+				ajouterSiValide();
+			
+			// Si le bouton est "Supprimer", on supprimer 
+			// les participants sélectionnés de la clinique.
 			else
 				supprimerSelections();
 			
 		}
-		
+
 		/**
-	     * COMING SOOON
+	     * Récupère les indices des lignes sélectionnées à partir 
+	     * de la table participant (multi-séletion) et 
+	     * retire le participant de la liste à afficher. 
+	     * Le participant n'est disponible dans la table.
 	     *
 	     */
 		private void supprimerSelections() {
-			// TODO Auto-generated method stub
-			System.out.println("Supprime");
+			
+			// Récupère les indices des lignes sélectionnées grâce à la méthode
+			// "getSelectedRowCount()" qui retourne le nombre de rangée de 
+			// sélectionnées.
+			for(int i = 0; i < tableDonnees.getSelectedRowCount(); i++) {
+				
+				// Grâce à la méthode "getSelectedRow()", on supprime le 
+				// premier élément des rangées voulu.
+				((DefaultTableModel)tableDonnees.getModel()).getDataVector().
+				remove(tableDonnees.getSelectedRow());
+				
+				// Supprime les participants sélectionnées de la 
+				// liste des participants.
+				listeParticipant.remove(tableDonnees.getSelectedRow());
+
+			}
+			
+			// S'occupe de sauvergarder les modifications.
+			UtilitaireFichier.sauvegarderClinique(clinique, Constantes.CHEMIN_FICHIER);
+			
+			// Si la liste est maintenant vide, on passe au mode ajout.
+			if(tableDonnees.getRowCount() == 0) afficherPanneauSaisie();
+			
+			// On rafraîchit l'affichage si notre liste n'est pas vide.
+			else {
+				
+				// Permet de rafraîchir le panneau cadre.
+				UtilitaireSwing.rafraichirCadre(panneauPrincipal);
+				
+				// Enlève les sélections de la liste déroulante.
+				tableDonnees.clearSelection();
+				
+			}
 			
 		}
 		
 		/**
-	     * COMING SOOON
+	     * Rend la liste déroulante invisible et rend 
+	     * le panneau de saisie visible en affichant 
+	     * les boutons pour l'interface de saisie ("Ok" et "Annule")
+	     * et en rafraîchissant le panneau principal.
 	     *
 	     */
-		private void passerModeAjout() {
-			// TODO Auto-generated method stub
-			System.out.println("Ajoute");
+		private void passerAuModeAjout() {
+			
+			afficherPanneauSaisie();
+			
+			UtilitaireSwing.rafraichirCadre(panneauPrincipal);
+			
+		}
+		
+		/**
+		 * Lorsqu'on clique sur le bouton "Annule":
+	     * Rend le panneau de saisie invisible et rend 
+	     * la liste déroulante visible en affichant 
+	     * les boutons pour l'interface de gestion ("Ajouter" et "Supprimer")
+	     * 
+	     *
+	     */
+		private void annuler() {
+			
+			afficherListeDeroulante();
+			
+		}
+		
+		/**
+	     * Vérifie si les informations du participant réponds aux 
+	     * exigences, donc qu'il n'y a pas d'erreur. Si aucune erreur est 
+	     * trouvé, on ajoute la participant à la liste à afficher, la clinique 
+	     * est sauvegardée et on mets à jour l'interface. C'est-à-dire qu'on 
+	     * remet les champs de saisie vides et qu'on rafraîchit l'interface.
+	     *
+	     */
+		private void ajouterSiValide() {
+			
+			/** ATTRIBUT **/
+			// Référence sur un objet de type Participant.
+			Participant nouveauParticipant;
+			
+			// Vérifie si aucune erreur est présente dans 
+			// l'identification du participant.
+			if(!panneauSaisie.aviserDuneErreur()) {
+				
+				// Retourne le participant que nous venons d'écrire.
+				nouveauParticipant = panneauSaisie.getParticipant();
+				
+				// Vérifie si le participant est déjà présent dans liste
+				// des participants.
+				if(listeParticipant.contains(nouveauParticipant)) {
+					
+					JOptionPane.showMessageDialog(CadreGestionParticipant.this,
+							Constantes.MSG_PAT_DEJA_PRESENT);
+
+				}
+				
+				// Si le participant n'est pas déjà dans la liste.
+				else {
+					
+					// Ajout du participant à liste.
+					listeParticipant.add(nouveauParticipant);
+					
+					// Sauvegarde de la clinique.
+					UtilitaireFichier.sauvegarderClinique(clinique, 
+							Constantes.CHEMIN_FICHIER);
+					
+					// Mise à jour de la table dans la liste déroulante.
+					miseAJourTableDonnees();
+					
+					// Met les champs de saisie vide 
+					// et rafraîchit le panneau du cadre.
+					panneauSaisie.reset();
+					
+					UtilitaireSwing.rafraichirCadre(panneauPrincipal);
+					
+				}
+				
+			}
+			
 		}
 		
 	}

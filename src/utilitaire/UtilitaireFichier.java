@@ -154,8 +154,8 @@ public class UtilitaireFichier {
 	                    break;
 	                    case "infirmier": liste.add(new Infirmier(id, true));
 	                    break;
-	                    //case "patient": liste.add(new Patient(id, ""));
-	                    //break;
+	                    case "patient": liste.add(new Patient(id, ""));
+	                    break;
 	                    
 	                }
 	                
