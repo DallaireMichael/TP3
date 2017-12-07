@@ -9,7 +9,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 /**
- * À vous de commenter
+ * Initialise un menu avec une liste de gestion de participants.
+ * Ce menu permet de faire afficher la gestion de chacun des types
+ * de participants
+ * 
+ * Il y a un choix supplémentaire qui permet de quitter l'application
  * 
  * @author Michaël Dallaire
  * @version 1.0
@@ -53,6 +57,7 @@ public class MonMenuBar extends JMenuBar implements ActionListener{
     
     /**
      * CONSTRUCTEUR
+     * Insancie le menu de gestion et ajoute un choix pour quitter
      * @param cadreClinique
      */
 	public MonMenuBar(CadreClinique cadreClinique) {
@@ -82,8 +87,8 @@ public class MonMenuBar extends JMenuBar implements ActionListener{
 	 */
 	public void creeListeMenuItem(JMenu gestionMenu){
 	    
-	    /**
-	     * Stratégie : Une boucle passe à travers le tableau de texte 
+	    /*
+	     * STRATÉGIE : Une boucle passe à travers le tableau de texte 
 	     * crée un objet JMenuItem pour chaque et l'ajoute a gestionMenu
 	     */
 	    
@@ -117,16 +122,16 @@ public class MonMenuBar extends JMenuBar implements ActionListener{
 	            
 	            cadreClinique.gererPatient();
 	            
-	        }else if(((AbstractButton) e.getSource()).getText() ==
+	    }else if(((AbstractButton) e.getSource()).getText() ==
 	                    TAB_MENU_ITEM_TEXT[2]){
 	                
 	                cadreClinique.gererInfirmier();
 	                
-	            }else{
+	    }else{
 	                
 	                System.exit(0);
 	                
-	            }
+	    }
 	 }
 	    
 }

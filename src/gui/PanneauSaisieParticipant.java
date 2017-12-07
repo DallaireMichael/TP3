@@ -106,7 +106,9 @@ implements InterfacePanSaisieParticipant {
      */
     @Override
     public Participant getParticipant() {
+    	
         return new Participant(getIdentification());
+        
     }
     
     /**
@@ -115,7 +117,7 @@ implements InterfacePanSaisieParticipant {
     @Override
     public boolean aviserDuneErreur() {
         
-        if(nomTextField.getText() == "" || prenomTextField.getText() == ""){
+        if(nomTextField.getText().equals("") || prenomTextField.getText().equals("")){
             
             JOptionPane optionPane = new JOptionPane(MSG_ERREUR,
                     JOptionPane.ERROR_MESSAGE);

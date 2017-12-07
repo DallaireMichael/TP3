@@ -59,8 +59,10 @@ public class UtilitaireFichier {
                 switch(type){
                     case "docteur": liste.add(new Docteur(id, (int) Math.random() * 3));
                     break;
-                   // case "infirmier": liste.add(new Infirmier(id, true));
-                  //  break;
+                    
+                    case "infirmier": liste.add(new Infirmier(id, true));
+                    break;
+                    
                     case "patient": liste.add(new Patient(id, ""));
                     break;
                     

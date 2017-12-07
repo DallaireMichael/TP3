@@ -19,7 +19,13 @@ import clinique.Clinique;
 import clinique.Participant;
 
 /**
- * À vous de commenter
+ * Cadre qui apparait lorsqu'un sélectionne un type de participant
+ * dans le menu de gestion. 
+ * 
+ * Une fenêtre de gestion apparait en affichant respectivement
+ * les composantes pour chaque participants
+ * 
+ * Permet d'ajouter ou de supprimer des participants
  * 
  * @author Michaël Dallaire
  * @version 1.0
@@ -107,6 +113,13 @@ public class CadreGestionParticipant extends JDialog implements ActionListener {
      */
     public void initialiseLesComposantesCadreGestion(Point position,
             Dimension dimCadre){
+    	
+    	/*
+    	 * STRATÉGIE : Créer d'abord les instances necessaire de Swing
+    	 * les paramètrer par la suite.
+    	 * 
+    	 * Intégrer les panneau intérieur à celui principal
+    	 */
         
         tableDonnees = UtilitaireSwing.obtenirListe_A_Afficher(
                 listeParticipant.toArray());
@@ -136,11 +149,18 @@ public class CadreGestionParticipant extends JDialog implements ActionListener {
         add(panneauPrincipal);
         
         //Ajout de la liste deroulante et du panneau du bas au panneau
-        //principal
-        panneauPrincipal.add(listeDeroulante);
-        panneauPrincipal.add(panneauBas, BorderLayout.PAGE_END);
+        //principal s'il y a au moins une ligne
+        if(tableDonnees.getRowCount() > 0) {
+        	
+        	panneauPrincipal.add(listeDeroulante);
+        	
+        }else {
+        	
+        	panneauPrincipal.add((JPanel)panneauSaisie, BorderLayout.PAGE_START);
+        	
+        }
         
-        panneauPrincipal.add((JPanel)panneauSaisie, BorderLayout.PAGE_START);
+        panneauPrincipal.add(panneauBas, BorderLayout.PAGE_END);
         
         //paramètres du cadre de gestion JDialog
         setSize(dimCadre);
