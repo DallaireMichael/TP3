@@ -11,7 +11,8 @@ import utilitaire.Constantes;
 /**
  * Cette classe s'occupe de gérer la saisie des informations 
  * spécifique aux Patients. La classe hérite de PanneauSaisieParticipant,
- * donc nous avons accès aux méthodes de son parent.
+ * donc nous avons accès aux méthodes de son parent. Pour le patient,
+ * on a un champ de saisie supplémentaire pour le NAS.
  * 
  * @author	Niko Girardelli
  * @version	Automne 2017

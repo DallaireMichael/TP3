@@ -7,7 +7,8 @@ import clinique.Infirmier;
 /**
  * Cette classe s'occupe de gérer la saisie des informations 
  * spécifique aux infirmiers. La classe hérite de PanneauSaisieParticipant,
- * donc nous avons accès aux méthodes de son parent.
+ * donc nous avons accès aux méthodes de son parent. De plus, un infirmier 
+ * a une case à cocher afin de définir sa disponibilité.
  * 
  * @author	Niko Girardelli
  * @version	Automne 2017

@@ -12,7 +12,8 @@ import utilitaire.Constantes;
 
 /**
  * Classe mère des tous les panneaux utiles pour la clinique.
- * Elle permet de saisir l'identification d'un participant.
+ * Elle permet de saisir l'identification d'un participant
+ * dans un champ pour le nom et un champ pour le prénom.
  * 
  * @author	Niko Girardelli
  * @version	Automne 2017

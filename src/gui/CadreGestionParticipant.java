@@ -196,7 +196,8 @@ public class CadreGestionParticipant extends JDialog {
     	panneauBas.add(panneauGestion);
     	
     	// Ajout de la sous-classe BoutonsSaisie au panneauBas.
-    	panneauBas.add(panneauBoutonsSaisie = new PanneauBoutonsSaisie());
+    	panneauBoutonsSaisie = new PanneauBoutonsSaisie();
+    	panneauBas.add(panneauBoutonsSaisie);
     	
     	// Association du panneau principal au panneau de composante cadre.
     	add(panneauPrincipal);
@@ -348,6 +349,14 @@ public class CadreGestionParticipant extends JDialog {
 	     *
 	     */
 		private void supprimerSelections() {
+			
+			// Si aucune sélection est faite
+			if(tableDonnees.getSelectedRowCount() == 0) {
+				
+				JOptionPane.showMessageDialog(CadreGestionParticipant.this,
+						Constantes.MSG_SELECT_AUCUNE);
+				
+			}
 			
 			// Récupère les indices des lignes sélectionnées grâce à la méthode
 			// "getSelectedRowCount()" qui retourne le nombre de rangée de 

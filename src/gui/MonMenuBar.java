@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.JMenu;
@@ -13,7 +12,7 @@ import utilitaire.Constantes;
 
 /**
  * Classe qui permet d'afficher le menu qu'on retrouve
- * en haut à gauche de la fenêtre. On y retrouve des onglets, dont
+ * en haut à gauche de la fenêtre. On y retrouve les onglets, dont
  * Docteur, Infirmier, Patient et Quitter. 
  * 
  * @author	Niko Girardelli

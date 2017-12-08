@@ -6,14 +6,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import clinique.Clinique;
 import clinique.Docteur;
 import utilitaire.Constantes;
 
 /**
  * Cette classe s'occupe de gérer la saisie des informations 
  * spécifique aux docteurs. La classe hérite de PanneauSaisieParticipant,
- * donc nous avons accès aux méthodes de son parent.
+ * donc nous avons accès aux méthodes de son parent. De plus, on ajoute un
+ * liste déroulante pour choisir le département du docteur qu'on veut ajouter.
  * 
  * @author	Niko Girardelli
  * @version	Automne 2017

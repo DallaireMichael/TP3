@@ -37,6 +37,11 @@ public class Constantes {
 	public static final String MSG_SELECT_DEP_VIDE = 
 			"Le département n'a pas été sélectionné.";
 	
+	// Message lorsqu'aucune sélection est faite lors de la suppresion.
+	public static final String MSG_SELECT_AUCUNE = 
+	"Il faut choisir quelqu'un de la liste afin de procédé "
+	+ "à la suppression d'un participant.";
+	
 	// Message lorsqu'un participant fait déjà partie de la liste.
 	public static final String MSG_PAT_DEJA_PRESENT = 
 	"Le participant fait déjà partie de la liste.";
